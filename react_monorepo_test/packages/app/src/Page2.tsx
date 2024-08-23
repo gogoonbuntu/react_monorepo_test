@@ -7,7 +7,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #f0f4f8;
 `;
 
@@ -33,7 +33,7 @@ const StyledButton = styled.button`
   }
 `;
 
-const PopupOverlay = styled.div<{ show: boolean }>`
+const ModalOverlay = styled.div<{ show: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -42,20 +42,21 @@ const PopupOverlay = styled.div<{ show: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   opacity: ${props => (props.show ? 1 : 0)};
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
   transition: opacity 0.3s, visibility 0.3s;
+  z-index: 9999; // 매우 높은 z-index 값
 `;
 
-const PopupContent = styled.div<{ show: boolean }>`
+const ModalContent = styled.div<{ show: boolean }>`
   background: white;
   padding: 20px;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 90%;
   max-width: 500px;
-  transform: ${props => (props.show ? 'translateY(0)' : 'translateY(100%)')};
+  transform: ${props => (props.show ? 'translateY(0)' : 'translateY(-50px)')};
   transition: transform 0.3s ease-out;
 `;
 
@@ -114,12 +115,12 @@ const SliderInput = styled.input`
 `;
 
 export default function Page2() {
-  const [showPopup, setShowPopup] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [sliderValue, setSliderValue] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowPopup(true);
+      setShowModal(true);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -140,10 +141,10 @@ export default function Page2() {
           <StyledButton>Next</StyledButton>
         </Link>
       </Navigation>
-      <PopupOverlay show={showPopup}>
-        <PopupContent show={showPopup}>
-          <h2>Welcome to Page 2!</h2>
-          <p>This is a popup that slides up from the bottom of the screen.</p>
+      <ModalOverlay show={showModal}>
+        <ModalContent show={showModal}>
+        <h2>투자 금액 설정</h2>
+          <p>총 재산에 몇 퍼센트를 투자할까요??</p>
           <SliderContainer>
             <SliderLabel>{sliderValue}%</SliderLabel>
             <SliderInput
@@ -154,9 +155,9 @@ export default function Page2() {
               onChange={handleSliderChange}
             />
           </SliderContainer>
-          <CloseButton onClick={() => setShowPopup(false)}>Close</CloseButton>
-        </PopupContent>
-      </PopupOverlay>
+          <CloseButton onClick={() => setShowModal(false)}>Close</CloseButton>
+        </ModalContent>
+      </ModalOverlay>
     </PageContainer>
   );
 }
