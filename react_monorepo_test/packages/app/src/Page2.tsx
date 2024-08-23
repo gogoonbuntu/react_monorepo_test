@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from './Button';
 import styled from 'styled-components';
 
 const PageContainer = styled.div`
@@ -19,7 +18,7 @@ const Navigation = styled.div`
   margin-top: 20px;
 `;
 
-const StyledButton = styled(Button)`
+const StyledButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
   background-color: #4a90e2;
@@ -69,8 +68,54 @@ const CloseButton = styled(StyledButton)`
   }
 `;
 
+const SliderContainer = styled.div`
+  margin-top: 20px;
+  width: 100%;
+`;
+
+const SliderLabel = styled.div`
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const SliderInput = styled.input`
+  width: 100%;
+  -webkit-appearance: none;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4a90e2;
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4a90e2;
+    cursor: pointer;
+  }
+`;
+
 export default function Page2() {
   const [showPopup, setShowPopup] = useState(false);
+  const [sliderValue, setSliderValue] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -79,6 +124,10 @@ export default function Page2() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSliderValue(Number(event.target.value));
+  };
 
   return (
     <PageContainer>
@@ -95,6 +144,16 @@ export default function Page2() {
         <PopupContent show={showPopup}>
           <h2>Welcome to Page 2!</h2>
           <p>This is a popup that slides up from the bottom of the screen.</p>
+          <SliderContainer>
+            <SliderLabel>{sliderValue}%</SliderLabel>
+            <SliderInput
+              type="range"
+              min="0"
+              max="100"
+              value={sliderValue}
+              onChange={handleSliderChange}
+            />
+          </SliderContainer>
           <CloseButton onClick={() => setShowPopup(false)}>Close</CloseButton>
         </PopupContent>
       </PopupOverlay>
